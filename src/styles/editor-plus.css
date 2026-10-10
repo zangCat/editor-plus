@@ -1,0 +1,962 @@
+/* ===== editor-plus 全局样式 ===== */
+:root {
+  --ep-bg: #ffffff;
+  --ep-fg: #1f2328;
+  --ep-muted: #6e7781;
+  --ep-border: #d8dee4;
+  --ep-accent: #0969da;
+  --ep-accent-soft: rgba(9, 105, 218, 0.08);
+  --ep-code-bg: #f6f8fa;
+  --ep-blockquote-bg: #fff8e6;
+  --ep-radius: 8px;
+  --ep-font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --ep-font-mono:
+    "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+/* ===== 编辑器容器 ===== */
+.ep {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  background: var(--ep-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: var(--ep-radius);
+  overflow: hidden;
+}
+
+/* 主体区：左大纲面板（可选）+ 编辑器 host */
+.ep-body {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+}
+
+.ep-host {
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+/* ===== 大纲面板 ===== */
+.ep-outline {
+  width: 200px;
+  flex-shrink: 0;
+  border-right: 1px solid var(--ep-border);
+  background: #fafbfc;
+  overflow-y: auto;
+}
+
+.ep-outline__title {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 10px 14px 6px;
+  background: #fafbfc;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ep-muted);
+}
+
+.ep-outline__empty {
+  padding: 2px 14px 10px;
+  font-size: 12px;
+  color: var(--ep-muted);
+}
+
+.ep-outline__list {
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 10px;
+}
+
+.ep-outline__item {
+  display: block;
+  width: 100%;
+  border: none;
+  background: transparent;
+  text-align: left;
+  padding: 4px 10px 4px calc(14px + (var(--lv, 1) - 1) * 14px);
+  font-size: 13px;
+  font-family: var(--ep-font-sans);
+  color: var(--ep-fg);
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ep-outline__item:hover {
+  background: var(--ep-accent-soft);
+  color: var(--ep-accent);
+}
+
+/* ===== 状态栏（字数统计） ===== */
+.ep-status {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-top: 1px solid var(--ep-border);
+  background: #fafbfc;
+  font-size: 12px;
+  color: var(--ep-muted);
+  font-variant-numeric: tabular-nums;
+  user-select: none;
+}
+
+.ep-status__sep {
+  color: var(--ep-border);
+}
+
+.ep-mode-wysiwyg,
+.ep-mode-source {
+  min-height: 100%;
+}
+
+/* ===== 工具栏 ===== */
+.ep-toolbar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 2px;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--ep-border);
+  background: #fafbfc;
+}
+
+.ep-tb-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--ep-border);
+  margin: 0 6px;
+}
+
+.ep-tb-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #424a53;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: var(--ep-font-sans);
+}
+
+.ep-tb-btn:hover {
+  background: #eef1f4;
+  color: var(--ep-fg);
+}
+
+.ep-tb-btn.is-active {
+  background: var(--ep-accent-soft);
+  color: var(--ep-accent);
+}
+
+.ep-tb-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ep-tb-label {
+  letter-spacing: 0.02em;
+}
+
+.ep-tb-modes {
+  margin-left: auto;
+  display: flex;
+  gap: 2px;
+}
+
+.ep-tb-mode {
+  font-weight: 500;
+  padding: 0 10px;
+}
+
+/* ===== ProseMirror 内容 ===== */
+.ProseMirror {
+  outline: none;
+  padding: 20px 28px 60px;
+  font-size: 15px;
+  line-height: 1.75;
+  min-height: 100%;
+}
+
+.ProseMirror h1,
+.ProseMirror h2,
+.ProseMirror h3,
+.ProseMirror h4,
+.ProseMirror h5,
+.ProseMirror h6 {
+  margin: 1.2em 0 0.5em;
+  line-height: 1.35;
+  font-weight: 650;
+}
+
+.ProseMirror h1:first-child,
+.ProseMirror h2:first-child,
+.ProseMirror p:first-child {
+  margin-top: 0;
+}
+
+.ProseMirror h1 {
+  font-size: 1.85em;
+  border-bottom: 1px solid var(--ep-border);
+  padding-bottom: 0.25em;
+}
+
+.ProseMirror h2 {
+  font-size: 1.45em;
+}
+
+.ProseMirror h3 {
+  font-size: 1.2em;
+}
+
+.ProseMirror p {
+  margin: 0.6em 0;
+}
+
+.ProseMirror a {
+  color: var(--ep-accent);
+}
+
+.ProseMirror code {
+  font-family: var(--ep-font-mono);
+  font-size: 0.875em;
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.ProseMirror pre {
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: var(--ep-radius);
+  padding: 12px 14px;
+  overflow-x: auto;
+}
+
+.ProseMirror pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.ProseMirror blockquote {
+  margin: 0.8em 0;
+  padding: 0.4em 1em;
+  border-left: 4px solid #d4a72c;
+  background: var(--ep-blockquote-bg);
+  border-radius: 0 var(--ep-radius) var(--ep-radius) 0;
+}
+
+.ProseMirror ul,
+.ProseMirror ol {
+  padding-left: 1.6em;
+}
+
+.ProseMirror li {
+  margin: 0.25em 0;
+}
+
+.ProseMirror li p {
+  margin: 0.15em 0;
+}
+
+/* 任务清单 */
+.ProseMirror li[data-checked] {
+  list-style: none;
+  position: relative;
+}
+
+.ProseMirror li[data-checked="true"]::before,
+.ProseMirror li[data-checked="false"]::before {
+  content: "";
+  position: absolute;
+  left: -1.5em;
+  top: 0.45em;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ep-muted);
+  border-radius: 3px;
+  background: #fff;
+}
+
+.ProseMirror li[data-checked="true"]::before {
+  background: var(--ep-accent);
+  border-color: var(--ep-accent);
+}
+
+.ProseMirror li[data-checked="true"]::after {
+  content: "";
+  position: absolute;
+  left: -1.32em;
+  top: 0.55em;
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+}
+
+.ProseMirror li[data-checked="true"] > p {
+  color: var(--ep-muted);
+  text-decoration: line-through;
+  text-decoration-color: rgba(0, 0, 0, 0.25);
+}
+
+/* 表格（静态：首行为表头） */
+.ProseMirror table {
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  width: 100%;
+}
+
+.ProseMirror th,
+.ProseMirror td {
+  border: 1px solid var(--ep-border);
+  padding: 6px 12px;
+  text-align: left;
+  vertical-align: top;
+  min-width: 5em;
+}
+
+.ProseMirror th {
+  background: var(--ep-code-bg);
+  font-weight: 600;
+}
+
+.ProseMirror hr {
+  border: none;
+  border-top: 2px solid var(--ep-border);
+  margin: 1.4em 0;
+}
+
+.ProseMirror img {
+  max-width: 100%;
+  border-radius: var(--ep-radius);
+}
+
+/* 原始 HTML 展示（转义文本，不注入） */
+.ProseMirror [data-html-block] {
+  background: #fff8e6;
+  border: 1px dashed #d4a72c;
+  border-radius: var(--ep-radius);
+  padding: 8px 12px;
+  font-family: var(--ep-font-mono);
+  font-size: 12px;
+  color: #9a6700;
+  white-space: pre-wrap;
+}
+
+.ProseMirror [data-html-inline] {
+  background: #fff8e6;
+  border: 1px dashed #d4a72c;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-family: var(--ep-font-mono);
+  font-size: 0.8em;
+  color: #9a6700;
+}
+
+/* 数学公式（编辑器内为 TeX 源码占位，预览时 KaTeX 渲染） */
+.ProseMirror [data-math-block] {
+  background: #f3f6fb;
+  border: 1px dashed #7aa2e3;
+  border-radius: var(--ep-radius);
+  padding: 10px 12px;
+  font-family: var(--ep-font-mono);
+  font-size: 12px;
+  color: #2b5aa6;
+  white-space: pre-wrap;
+  margin: 6px 0;
+}
+
+.ProseMirror [data-math-inline] {
+  background: #f3f6fb;
+  border: 1px dashed #7aa2e3;
+  border-radius: 4px;
+  padding: 0 4px;
+  font-family: var(--ep-font-mono);
+  font-size: 0.85em;
+  color: #2b5aa6;
+}
+
+/* 占位符 */
+.ep-placeholder {
+  color: var(--ep-muted);
+  pointer-events: none;
+  position: absolute;
+}
+
+.ProseMirror .ep-placeholder {
+  position: static;
+  display: block;
+  margin: 0;
+}
+
+/* 代码高亮主题（精简版，github-light 风格） */
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-literal {
+  color: #cf222e;
+}
+
+.hljs-string,
+.hljs-attr {
+  color: #0a3069;
+}
+
+.hljs-title,
+.hljs-title.function_ {
+  color: #8250df;
+}
+
+.hljs-comment {
+  color: #6e7781;
+  font-style: italic;
+}
+
+.hljs-number {
+  color: #0550ae;
+}
+
+.hljs-built_in,
+.hljs-type {
+  color: #953800;
+}
+
+/* gapcursor */
+.ProseMirror-gapcursor {
+  display: none;
+  pointer-events: none;
+  position: absolute;
+}
+
+.ProseMirror-gapcursor:after {
+  content: "";
+  display: block;
+  position: absolute;
+  top: -2px;
+  width: 20px;
+  border-top: 2px solid var(--ep-fg);
+  animation: ep-blink 1.1s steps(2, start) infinite;
+}
+
+.ProseMirror-gapcursor.prosemirror-gapcursor {
+  display: flex;
+}
+
+@keyframes ep-blink {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* 选中节点/单元格 */
+.ProseMirror-selectednode {
+  outline: 2px solid var(--ep-accent);
+  border-radius: 4px;
+}
+
+/* ===== 预览面板 ===== */
+.ep-preview {
+  height: 100%;
+  overflow-y: auto;
+  background: var(--ep-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: var(--ep-radius);
+}
+
+.ep-preview-content {
+  padding: 20px 24px 60px;
+  font-size: 15px;
+  line-height: 1.75;
+}
+
+.ep-preview-content h1,
+.ep-preview-content h2,
+.ep-preview-content h3,
+.ep-preview-content h4,
+.ep-preview-content h5,
+.ep-preview-content h6 {
+  margin: 1.2em 0 0.5em;
+  font-weight: 650;
+  line-height: 1.35;
+}
+
+.ep-preview-content h1 {
+  font-size: 1.85em;
+  border-bottom: 1px solid var(--ep-border);
+  padding-bottom: 0.25em;
+}
+
+.ep-preview-content h2 {
+  font-size: 1.45em;
+}
+
+.ep-preview-content h3 {
+  font-size: 1.2em;
+}
+
+.ep-preview-content a {
+  color: var(--ep-accent);
+}
+
+.ep-preview-content code {
+  font-family: var(--ep-font-mono);
+  font-size: 0.875em;
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: 4px;
+  padding: 0.1em 0.35em;
+}
+
+.ep-preview-content pre {
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: var(--ep-radius);
+  padding: 12px 14px;
+  overflow-x: auto;
+}
+
+.ep-preview-content pre code {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+/* 预览中的 KaTeX 公式 */
+.ep-preview-content .katex {
+  font-size: 1.15em;
+}
+
+.ep-preview-content .ep-math-block {
+  margin: 16px 0;
+  overflow-x: auto;
+  text-align: center;
+}
+
+/* 行内公式过长：原子化内联块 + 横向滚动，避免撑破段落 */
+.ep-preview-content .ep-math-inline {
+  display: inline-block;
+  max-width: 100%;
+  overflow-x: auto;
+  vertical-align: middle;
+}
+
+.ep-preview-content blockquote {
+  margin: 0.8em 0;
+  padding: 0.4em 1em;
+  border-left: 4px solid #d4a72c;
+  background: var(--ep-blockquote-bg);
+  border-radius: 0 var(--ep-radius) var(--ep-radius) 0;
+}
+
+.ep-preview-content ul,
+.ep-preview-content ol {
+  padding-left: 1.6em;
+}
+
+.ep-preview-content li[data-checked] {
+  list-style: none;
+  position: relative;
+}
+
+.ep-preview-content li[data-checked="true"]::before,
+.ep-preview-content li[data-checked="false"]::before {
+  content: "";
+  position: absolute;
+  left: -1.5em;
+  top: 0.45em;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--ep-muted);
+  border-radius: 3px;
+  background: #fff;
+}
+
+.ep-preview-content li[data-checked="true"]::before {
+  background: var(--ep-accent);
+  border-color: var(--ep-accent);
+}
+
+.ep-preview-content li[data-checked="true"]::after {
+  content: "";
+  position: absolute;
+  left: -1.32em;
+  top: 0.55em;
+  width: 7px;
+  height: 4px;
+  border-left: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+  transform: rotate(-45deg);
+}
+
+.ep-preview-content li[data-checked="true"] {
+  color: var(--ep-muted);
+}
+
+.ep-preview-content table {
+  border-collapse: collapse;
+  margin: 0.8em 0;
+  width: 100%;
+}
+
+.ep-preview-content th,
+.ep-preview-content td {
+  border: 1px solid var(--ep-border);
+  padding: 6px 12px;
+  text-align: left;
+}
+
+.ep-preview-content th {
+  background: var(--ep-code-bg);
+}
+
+.ep-preview-content hr {
+  border: none;
+  border-top: 2px solid var(--ep-border);
+  margin: 1.4em 0;
+}
+
+.ep-preview-content img {
+  max-width: 100%;
+}
+
+/* ===== CodeMirror 源码模式 ===== */
+.ep-mode-source {
+  height: 100%;
+}
+
+.ep-mode-source .cm-editor {
+  height: 100%;
+}
+
+.ep-mode-source .cm-editor.cm-focused {
+  outline: none;
+}
+
+/* ===== IR 分屏模式 ===== */
+/* IR 下两侧各自独立滚动：先把 host → editor 的高度链路约束住 */
+.ep-host:has(.ep-mode-ir) > .ep-editor {
+  height: 100%;
+}
+
+.ep-mode-ir {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+}
+
+.ep-mode-ir .ep-ir-src {
+  flex: 1 1 50%;
+  min-width: 0;
+  border-right: 1px solid var(--ep-border);
+}
+
+.ep-mode-ir .ep-ir-src .cm-editor {
+  height: 100%;
+}
+
+.ep-mode-ir .ep-ir-src .cm-editor.cm-focused {
+  outline: none;
+}
+
+.ep-mode-ir .ep-ir-preview {
+  flex: 1 1 50%;
+  min-width: 0;
+  overflow-y: auto;
+  background: #fff;
+}
+
+/* ===== 命令输入浮层（受限环境 window.prompt 不可用时的降级） ===== */
+.ep-prompt-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(31, 35, 40, 0.4);
+}
+
+.ep-prompt-box {
+  min-width: 320px;
+  max-width: 80vw;
+  padding: 16px;
+  border-radius: var(--ep-radius);
+  background: var(--ep-bg);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+}
+
+.ep-prompt-title {
+  margin-bottom: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ep-fg);
+}
+
+.ep-prompt-input {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: var(--ep-font-mono);
+  color: var(--ep-fg);
+  outline: none;
+}
+
+.ep-prompt-input:focus {
+  border-color: var(--ep-accent);
+  box-shadow: 0 0 0 2px var(--ep-accent-soft);
+}
+
+.ep-prompt-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.ep-prompt-actions button {
+  padding: 4px 14px;
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  background: var(--ep-bg);
+  font-size: 13px;
+  color: var(--ep-fg);
+  cursor: pointer;
+}
+
+.ep-prompt-actions button:hover {
+  border-color: var(--ep-accent);
+  color: var(--ep-accent);
+}
+
+.ep-prompt-actions button:last-child {
+  border-color: var(--ep-accent);
+  background: var(--ep-accent);
+  color: #fff;
+}
+
+.ep-prompt-actions button:last-child:hover {
+  color: #fff;
+  opacity: 0.9;
+}
+
+/* ===== 即时渲染块/内联片段（wysiwyg）：Vditor 式点击回编辑 ===== */
+/* 块级：code_block 图表 / math_block / html_block */
+.ep-live-block {
+  position: relative;
+  margin: 0.75em 0;
+  border: 1px dashed var(--ep-border);
+  border-radius: var(--ep-radius);
+  overflow: visible;
+  cursor: default;
+}
+
+.ep-live-block:hover {
+  border-color: var(--ep-accent);
+}
+
+.ep-live-render {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: 12px;
+  overflow-x: auto;
+}
+
+.ep-live-render > * {
+  max-width: 100%;
+}
+
+.ep-live-render.ep-live-loading::after {
+  content: '渲染中…';
+  color: var(--ep-muted);
+  font-size: 13px;
+}
+
+.ep-live-render.ep-live-error {
+  color: #cf222e;
+  font-size: 13px;
+}
+
+.ep-live-hint {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  padding: 2px 10px;
+  font-family: inherit;
+  font-size: 11px;
+  color: var(--ep-muted);
+  background: var(--ep-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  opacity: 0;
+  transition:
+    opacity 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.ep-live-block:hover .ep-live-hint {
+  opacity: 1;
+}
+
+.ep-live-hint:hover {
+  border-color: var(--ep-accent);
+  color: var(--ep-accent);
+}
+
+.ep-live-edit {
+  display: none;
+  padding: 10px;
+}
+
+.ep-live-block.editing {
+  cursor: text;
+  border-style: solid;
+}
+
+.ep-live-block.editing .ep-live-render,
+.ep-live-block.editing .ep-live-hint {
+  display: none;
+}
+
+.ep-live-block.editing .ep-live-edit {
+  display: block;
+}
+
+.ep-live-edit textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 130px;
+  padding: 8px 10px;
+  font-family: var(--ep-font-mono);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--ep-fg);
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  outline: none;
+  resize: vertical;
+  white-space: pre;
+}
+
+.ep-live-edit textarea:focus {
+  border-color: var(--ep-accent);
+  background: var(--ep-bg);
+}
+
+.ep-live-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.ep-live-actions button {
+  padding: 3px 12px;
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  background: var(--ep-bg);
+  font-size: 12px;
+  color: var(--ep-fg);
+  cursor: pointer;
+}
+
+.ep-live-actions button:hover {
+  border-color: var(--ep-accent);
+  color: var(--ep-accent);
+}
+
+.ep-live-tip {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--ep-muted);
+}
+
+/* 行内：math_inline / html_inline，点击弹出就近编辑框 */
+.ep-live-inline {
+  position: relative;
+  cursor: pointer;
+  border-bottom: 1px dashed transparent;
+}
+
+.ep-live-inline:hover {
+  border-bottom-color: var(--ep-border);
+}
+
+.ep-live-inline.editing {
+  cursor: text;
+}
+
+.ep-live-inline-editor {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 50;
+  box-sizing: border-box;
+  width: 280px;
+  padding: 8px;
+  background: var(--ep-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: var(--ep-radius);
+  box-shadow: 0 12px 32px rgba(31, 35, 41, 0.14);
+  cursor: default;
+}
+
+.ep-live-inline-editor textarea {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 64px;
+  padding: 6px 8px;
+  font-family: var(--ep-font-mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ep-fg);
+  background: var(--ep-code-bg);
+  border: 1px solid var(--ep-border);
+  border-radius: 6px;
+  outline: none;
+  resize: vertical;
+  white-space: pre;
+}
+
+.ep-live-inline-editor textarea:focus {
+  border-color: var(--ep-accent);
+  background: var(--ep-bg);
+}
+
+.ep-live-inline-editor .ep-live-actions {
+  margin-top: 6px;
+}
+
+.ep-live-inline-editor .ep-live-actions button {
+  padding: 2px 10px;
+  font-size: 11.5px;
+}
