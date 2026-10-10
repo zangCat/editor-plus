@@ -7,14 +7,14 @@
   "type": "module",
   "description": "editor-plus：ProseMirror 文档模型 + remark/mdast 序列化的现代 Markdown 编辑器（核心框架无关，UI 可自定义）",
   "license": "MIT",
-  "author": "zzh <3477301158@qq.com> (https://github.com/zang965390267)",
-  "homepage": "https://github.com/zang965390267/editor-plus#readme",
+  "author": "zzh <3477301158@qq.com> (https://github.com/zangCat)",
+  "homepage": "https://github.com/zangCat/editor-plus#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/zang965390267/editor-plus.git"
+    "url": "git+https://github.com/zangCat/editor-plus.git"
   },
   "bugs": {
-    "url": "https://github.com/zang965390267/editor-plus/issues"
+    "url": "https://github.com/zangCat/editor-plus/issues"
   },
   "files": [
     "dist"
